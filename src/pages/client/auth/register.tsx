@@ -3,7 +3,7 @@ import type { FormProps } from 'antd';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './register.scss';
-import { loginAPI } from '@/services/api';
+import { registerAPI } from '@/services/api';
 
 type FieldType = {
     fullName: string;
@@ -16,17 +16,21 @@ const RegisterPage = () => {
     const [isSubmit, setIsSubmit] = useState(false);
     const { message } = App.useApp();
     const navigate = useNavigate();
-
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
-        console.log(values)
-        const res = await loginAPI("user@gmail.com", "123456");
-        console.log(">>>check: ", res);
+        setIsSubmit(true);
 
-        // success
+        const { email, fullName, password, phone } = values;
+
+        const res = await registerAPI(fullName, email, password, phone);
         if (res.data) {
-            console.log(res.data.user);
+            //success
+            message.success("dang ki thanh cong");
+            navigate("/login");
+        } else {
+            //erro
+            message.error(res.message);
         }
-
+        setIsSubmit(false);
 
     };
 
