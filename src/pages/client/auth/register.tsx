@@ -20,7 +20,8 @@ const RegisterPage = () => {
         setIsSubmit(true);
 
         const { email, fullName, password, phone } = values;
-
+        // console.log("checlk data", values)
+        // debugger
         const res = await registerAPI(fullName, email, password, phone);
         if (res.data) {
             //success
