@@ -1,6 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import Layout from '@/layout'
+import Layout from '@/layout';
 import {
   createBrowserRouter,
   RouterProvider,
@@ -10,10 +10,16 @@ import AboutPage from 'pages/client/about';
 import LoginPage from 'pages/client/auth/login';
 import RegisterPage from 'pages/client/auth/register';
 import 'styles/global.scss'
-import HomePage from './pages/client/home';
-import { App } from 'antd';
-import { AppProvider } from './component/context/app.context';
-import ProtectedRoute from './pages/client/auth';
+import HomePage from 'pages/client/home';
+import { App, ConfigProvider } from 'antd';
+import { AppProvider } from 'component/context/app.context';
+import ProtectedRoute from 'component/auth';
+import DashBoardPage from 'pages/admin/dashboard';
+import ManageBookPage from 'pages/admin/manage.book';
+import ManageOrderPage from 'pages/admin/manage.order';
+import ManageUserPage from 'pages/admin/manage.user';
+import LayoutAdmin from 'component/layout/layout.admin';
+import enUS from 'antd/locale/en_US';
 
 const router = createBrowserRouter([
   {
@@ -39,6 +45,44 @@ const router = createBrowserRouter([
             <div>checkout page</div>
           </ProtectedRoute>
         ),
+      }
+    ]
+  },
+  {
+    path: "admin",
+    element: <LayoutAdmin />,
+    children: [
+      {
+        index: true,
+        element: (
+          <ProtectedRoute>
+            <DashBoardPage />
+          </ProtectedRoute>
+        )
+      },
+      {
+        path: "book",
+        element: (
+          <ProtectedRoute>
+            <ManageBookPage />
+          </ProtectedRoute>
+        )
+      },
+      {
+        path: "order",
+        element: (
+          <ProtectedRoute>
+            <ManageOrderPage />
+          </ProtectedRoute>
+        )
+      },
+      {
+        path: "user",
+        element: (
+          <ProtectedRoute>
+            <ManageUserPage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/admin",
@@ -48,7 +92,8 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
-    ],
+
+    ]
   },
   {
     path: "/login",
@@ -58,13 +103,16 @@ const router = createBrowserRouter([
     path: "/register",
     element: <RegisterPage />,
   },
+
 ]);
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App>
       <AppProvider>
-        <RouterProvider router={router} />
+        <ConfigProvider locale={enUS}>
+          <RouterProvider router={router} />
+        </ConfigProvider>
       </AppProvider>
     </App>
   </StrictMode>,
